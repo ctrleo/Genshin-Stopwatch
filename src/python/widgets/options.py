@@ -153,10 +153,12 @@ class optionsDock(qtw.QDockWidget):
     
     def debugMode(self):
         if os.path.isfile('DEBUG_MODE'):
+            LOGGER.info('Disabling debug mode (this will take effect on next restart)')
             os.remove('DEBUG_MODE')
             self.debugModeCheckbox.setChecked(False)
         else:
-            open('debug.log', 'w').close()
+            LOGGER.info('Enabling debug mode (this will take effect on next restart)')
+            open('DEBUG_MODE', 'w').close()
             self.debugModeCheckbox.setChecked(True)
 
     def openKoFiLink(self) -> None:
