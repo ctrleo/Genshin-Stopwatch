@@ -1,5 +1,6 @@
 import os
 import sys
+import logging
 from datetime import timedelta
 from enum import StrEnum
 
@@ -34,3 +35,10 @@ PROGRAM_NAME = 'Genshin Stopwatch'
 MAIN_WINDOW = 'mw'
 SYS_TRAY = 'System Tray'
 TOOLBAR = 'tb'
+
+#initialize logger
+LOGGER = logging.getLogger('Genshin Stopwatch')
+if os.path.isfile('debug.log') == False:
+    open('debug.log', 'w').close()
+logging.basicConfig(filename='debug.log', encoding='utf-8', level=logging.DEBUG)
+LOGGER.info('Logger Initialized')
