@@ -96,8 +96,8 @@ class optionsDock(qtw.QDockWidget):
 
         self.debugModeCheckbox = qtw.QCheckBox()
         self.debugModeCheckbox.setText('Debug Mode')
-        self.debugModeCheckbox.setChecked(os.file.exists('DEBUG_MODE'))
-        self.debugModeCheckbox.clicked.connect()
+        self.debugModeCheckbox.setChecked(os.path.isfile('DEBUG_MODE'))
+        self.debugModeCheckbox.clicked.connect(self.debugMode)
         self.debugModeCheckbox.setToolTip('Enables debug features, such as verbose logging.')
         
         # Label for color scheme dropdown
@@ -152,7 +152,7 @@ class optionsDock(qtw.QDockWidget):
         self.style().polish(self.applyButton)
     
     def debugMode(self):
-        if os.file.exists('DEBUG_MODE'):
+        if os.path.isfile('DEBUG_MODE'):
             os.remove('DEBUG_MODE')
             self.debugModeCheckbox.setChecked(False)
         else:
