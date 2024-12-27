@@ -11,7 +11,7 @@ from widgets.toolbar import toolbar
 from widgets.guide import Guide
 from widgets.staticTimers import staticTimers
 from widgets.central import centralWidget
-from constants import MAIN_WINDOW, TimeFormats
+from constants import MAIN_WINDOW, LOGGER, TimeFormats
 from saveConfig import saveConfig, ConfigKeys
 from dataParser import dataParser, StopwatchDataKeys
 
@@ -24,6 +24,7 @@ class window(qtw.QMainWindow):
 
     def __init__(self, app: qtw.QApplication):
         super().__init__()
+        LOGGER.debug("Creating main window")
 
         self.config = saveConfig()
 

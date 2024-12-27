@@ -6,7 +6,7 @@ import PySide6.QtWidgets as qtw
 from PySide6.QtCore import Qt, QTimer
 
 from saveConfig import saveConfig, ConfigKeys
-from constants import ONE, ZERO, TimeFormats
+from constants import ONE, ZERO, LOGGER, TimeFormats
 import notify
 
 if TYPE_CHECKING:
@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 class staticTimers(qtw.QDockWidget):
     def __init__(self, parent: window = None):
         super().__init__(parent)
+        LOGGER.debug("Opening Static Timers")
 
         self.config = saveConfig()
 
@@ -124,6 +125,7 @@ class staticTimers(qtw.QDockWidget):
         self.weeklyDifference = self.weeklyDeadline - self.today
         
         self.config.save()
+        LOGGER.debug("Saved timers")
 
         self.dailyQTimer.start(1000)
         self.weeklyQTimer.start(1000)
@@ -181,6 +183,7 @@ class staticTimers(qtw.QDockWidget):
         self.config.save()
 
         self.serverChange = True
+        LOGGER.info(f"Server changed to {server}")
 
         self.dailyQTimer.stop()
         self.weeklyQTimer.stop()

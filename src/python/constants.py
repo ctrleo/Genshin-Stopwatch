@@ -16,6 +16,9 @@ class TimeFormats(StrEnum):
 # This is used for when dealing with files that are packaged within the exe such as guide.html
 IS_SCRIPT: bool = not getattr(sys, 'frozen', False)
 
+# checks directory for debug file, if present, logging level is set to debug
+DEBUG_MODE = os.path.isfile('DEBUG_MODE')
+
 # Loading paths, using `os.curdir` instead of `os.dirname(__file__)` because the file dir is in a temp dir
 ROOT = os.path.abspath(os.path.dirname(__file__)) if not IS_SCRIPT else os.path.join(os.path.abspath(os.getcwd()), 'src', 'python')
 CONFIG = os.path.abspath('config.ini')
@@ -40,5 +43,9 @@ TOOLBAR = 'tb'
 LOGGER = logging.getLogger('Genshin Stopwatch')
 if os.path.isfile('debug.log') == False:
     open('debug.log', 'w').close()
-logging.basicConfig(filename='debug.log', encoding='utf-8', level=logging.DEBUG)
-LOGGER.info('Logger Initialized')
+if DEBUG_MODE:
+    logLevel = logging.DEBUG
+else:
+    logLevel = logging.INFO
+logging.basicConfig(filename='debug.log', encoding='utf-8', level=logLevel)
+LOGGER.debug('Loaded constants.py')

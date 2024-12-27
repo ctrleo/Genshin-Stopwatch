@@ -9,6 +9,7 @@ from saveConfig import saveConfig
 from dataParser import dataParser, StopwatchDataKeys
 from style import StyleManager
 from widgets.stopwatch import Stopwatch, Property
+from constants import LOGGER
 
 if TYPE_CHECKING:
     from widgets.mainWindow import window
@@ -57,6 +58,7 @@ class centralWidget(qtw.QWidget):
 
         self.stopwatchCountChanged.connect(self.showOrHideHelperLabel)
         self.showOrHideHelperLabel()
+        LOGGER.info("Central widget created (central.py)")
 
     def showOrHideHelperLabel(self):
 
@@ -68,6 +70,7 @@ class centralWidget(qtw.QWidget):
             self.helperLabel.hide()
 
     def addStopWatch(self, timeObject: str, duration: timedelta, name: str, startDuration: timedelta, color: str, notepadContents: str = '', save: bool = True) -> None:
+        LOGGER.debug("Creating stopwatch (central.py)")
         # Create a Stopwatch object
         stopwatch = Stopwatch(timeObject, duration, name, startDuration, color, notepadContents, central=self)
 
@@ -80,22 +83,27 @@ class centralWidget(qtw.QWidget):
 
         # Make stopwatch visible
         stopwatch.show()
+        LOGGER.info("Stopwatch created (central.py)")
 
         if save:
+            LOGGER.info("Saving stopwatch data (central.py)")
             self.saveData()
 
         self.stopwatchCountChanged.emit()
     
     def removeStopwatch(self, stopwatch: Stopwatch) -> None:
+        LOGGER.debug("Deleting stopwatch (central.py)")
         '''Removes stopwatch from save file'''
 
         self.dataParser.remove_section(stopwatch.id_)
+        LOGGER.debug("Removed stopwatch from save (central.py)")
         self.saveData()
+        LOGGER.info("Saved data (stopwatch removed) (central.py)")
 
         self.stopwatchCountChanged.emit()
 
     def saveData(self):
-
+        LOGGER.debug("Running saveData (central.py)")
         stopwatch: Stopwatch
         for stopwatch in self.findChildren(Stopwatch):
 
@@ -116,5 +124,6 @@ class centralWidget(qtw.QWidget):
 
             for key, value in stopwatchData.items():
                 self.dataParser.set(objectName, key, value)
-
+        
         self.dataParser.save()
+        LOGGER.debug("Saved data (central.py)")

@@ -5,7 +5,7 @@ import PySide6.QtNetwork as qtn
 
 import tempfile, platform, zipfile, sys, os, shutil
 
-from constants import ICON
+from constants import ICON, LOGGER
 from PySide6.QtCore import Slot
 
 
@@ -13,6 +13,7 @@ class updateApp(qtw.QDialog):
     def __init__(self):
         super().__init__()
 
+        LOGGER.info("Downloading update")
         self.setWindowTitle("Downloading update...")
         self.setWindowIcon(qtg.QIcon(ICON))
         
@@ -38,6 +39,7 @@ class updateApp(qtw.QDialog):
         self.manager = qtn.QNetworkAccessManager(self)
         # appending bytes
         if self.file.open(qtc.QIODevice.WriteOnly):
+            LOGGER.info(f"Downloading from {self.url.toString()}")
             self.reply = self.manager.get(qtn.QNetworkRequest(self.url))
             self.reply.downloadProgress.connect(self.on_progress)
             self.reply.finished.connect(self.on_finished)
@@ -45,9 +47,10 @@ class updateApp(qtw.QDialog):
             self.reply.errorOccurred.connect(self.on_error)
         else:
             error = self.file.errorString()
-            print(f"Cannot open device: {error}")
+            LOGGER.error(f"Cannot open device: {error}")
 
     def install(self):
+        LOGGER.info("Installing update")
         with zipfile.ZipFile(self.path) as openzip:
             openzip.extractall(self.target_dir)
         latestExec = os.path.join(self.target_dir, f"Genshin-Stopwatch-{self.platform.lower()}-latest", "GenshinStopwatch")
@@ -57,8 +60,10 @@ class updateApp(qtw.QDialog):
             os.rename(sys.executable, "Genshin-Stopwatch_OLD.exe")
         else:
             os.remove(sys.executable)
+        
         shutil.copyfile(latestExec, execPath)
         shutil.rmtree(self.target_dir)
+        LOGGER.info("Installed latest version")
         try:
             os.startfile(execPath)
         except:
@@ -75,6 +80,7 @@ class updateApp(qtw.QDialog):
     
     @Slot()
     def on_finished(self):
+        LOGGER.info("Download Finished")
         if self.reply:
             self.reply.deleteLater()
         if self.file:
@@ -90,3 +96,4 @@ class updateApp(qtw.QDialog):
     def on_error(self, code: qtn.QNetworkReply.NetworkError):
         if self.reply:
             qtw.QMessageBox.warning(self, "Error Occurred", self.reply.errorString())
+            LOGGER.error(f"Error: {self.reply.errorString()}")

@@ -9,6 +9,8 @@ from PySide6.QtCore import Qt, Signal
 from saveConfig import saveConfig, ConfigKeys
 from style import StyleManager, ColorPallets
 
+from constants import LOGGER
+
 if TYPE_CHECKING:
     from widgets.mainWindow import window
     import PySide6.QtGui as qtg
@@ -188,8 +190,8 @@ class addTimer(qtw.QDockWidget):
         self.startTimerButton = qtw.QPushButton('Start Timer')
         self.startTimerButton.clicked.connect(self.startStopWatch)
         verticalLayout.addWidget(self.startTimerButton, alignment=Qt.AlignmentFlag.AlignTop)
-
         self.setWidget(self.centralFrame)
+        LOGGER.debug("Created widget (addTimer.py)")
 
     def hideAll(self):
         for widget in (self.lineEdit1, 
@@ -301,6 +303,7 @@ class addTimer(qtw.QDockWidget):
                 self.durationDropDown.addItems(selectedTopic)
 
     def calculateExpedition(self) -> timedelta:
+        LOGGER.debug('Running calculateExpedition (addTimer.py)')
         duration: str = self.durationDropDown.currentText()
 
         # If discount is checked, use the expedition discount dict instead
@@ -311,6 +314,7 @@ class addTimer(qtw.QDockWidget):
         return timedelta(hours=hours)
 
     def calculateRealmCurrency(self) -> timedelta:
+        LOGGER.debug('Running calculateRealmCurrency (addTimer.py)')
         # Rerieve maximum storage and rate values
         maxStorage: int = self.REALM_CURRENCY_MAX_STORAGE_VALUES[self.lineEdit1.text()]
 
@@ -322,6 +326,7 @@ class addTimer(qtw.QDockWidget):
         return timedelta(hours=duration)
     
     def calculateFriendShipPoints(self) -> timedelta:
+        LOGGER.debug('Running calculateFriendShipPoints (addTimer.py)')
         # Rerieve maximum storage and rate values
 
         maxStorage = int(self.lineEdit1.text()) * 50
@@ -334,6 +339,7 @@ class addTimer(qtw.QDockWidget):
         return timedelta(hours=duration)
 
     def calculateCustom(self) -> timedelta:
+        LOGGER.debug('Running calculateCustom (addTimer.py)')
         # Retrieve input values for days, hours, and minutes
         days: str|int = self.lineEdit1.text() if self.lineEdit1.text().isdigit() else 0
         hours: str|int = self.lineEdit2.text() if self.lineEdit2.text().isdigit() else 0
@@ -347,6 +353,7 @@ class addTimer(qtw.QDockWidget):
         return timedelta(days=days, hours=hours, minutes=minutes)
 
     def calculateStamina(self) -> timedelta:
+        LOGGER.debug('Running calculateStamina (addTimer.py)')
         # Get inputs
         amountOfStamina: str = self.lineEdit1.text()
         desiredStamina: str = self.lineEdit2.text()
@@ -361,6 +368,7 @@ class addTimer(qtw.QDockWidget):
         return timedelta(minutes=minutes)
 
     def calculateDefault(self) -> timedelta:
+        LOGGER.debug('Running calculateDefault (addTimer.py)')
         duration: str = self.durationDropDown.currentText()
 
         duration = duration.split()
@@ -375,6 +383,7 @@ class addTimer(qtw.QDockWidget):
         return timedelta(hours=hours)
 
     def startStopWatch(self):
+        LOGGER.info("Starting stopwatch/timer (addTimer.py)")
         '''
         Fired when the addTimer button is pressed.
         This gathers then transforms the current data suitable for the stopwatch's 
@@ -444,6 +453,7 @@ class addTimer(qtw.QDockWidget):
 
         # Call the createStopWatch event with the relevant parameters
         self.createStopwatch.emit(timeObject, duration, name, duration, color)
+        LOGGER.info(f"Timer created with the following parameters: {timeObject}, {duration}, {name}, {duration}, {color}")
 
     def hideEvent(self, a0: qtg.QHideEvent) -> None:
         # Check if the parent widget is hidden

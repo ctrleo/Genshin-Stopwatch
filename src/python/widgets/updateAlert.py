@@ -3,7 +3,7 @@ import PySide6.QtGui as qtg
 
 from saveConfig import saveConfig, ConfigKeys
 
-from constants import ICON
+from constants import ICON, LOGGER
 
 from widgets.installUpdate import updateApp
 
@@ -11,6 +11,7 @@ from widgets.installUpdate import updateApp
 class UpdateAlert(qtw.QDialog):
     def __init__(self, latestVersion: str, changelog: str) -> None:
         super().__init__()
+        LOGGER.debug("Update Alert triggered")
 
         self.config = saveConfig()
 

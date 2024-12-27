@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from enum import StrEnum, auto
+from constants import LOGGER
 import webbrowser
 
 import PySide6.QtWidgets as qtw
@@ -23,6 +24,7 @@ class ApplyChangesProperty(StrEnum):
 class optionsDock(qtw.QDockWidget):
     def __init__(self, parent: window = None):
         super().__init__(parent)
+        LOGGER.debug('Opening options menu')
 
         self.mw = parent
 

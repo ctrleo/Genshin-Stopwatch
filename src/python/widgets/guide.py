@@ -1,9 +1,10 @@
 import PySide6.QtWidgets as qtw
 import PySide6.QtGui as qtg
 
-from constants import GUIDE, ICON
+from constants import GUIDE, ICON, LOGGER
 
 class Guide(qtw.QWidget):
+    LOGGER.debug("Displaying Guide")
     def __init__(self):
         super().__init__()
 
@@ -29,7 +30,7 @@ class Guide(qtw.QWidget):
                 self.textFile.setHtml(html.read())
 
         except Exception as e:
-
+            LOGGER.debug(f'Error reading guide: {e}')
             self.textFile.setHtml(
                 f'''
                 <h1>Error. Could not find Guide:</h1>
@@ -38,3 +39,4 @@ class Guide(qtw.QWidget):
                 ''')
         
         verticalLayout.addWidget(self.textFile)
+        LOGGER.info("Displayed Guide")
