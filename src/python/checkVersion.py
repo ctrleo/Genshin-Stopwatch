@@ -5,7 +5,7 @@ from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkRe
 
 from semantic_version import Version
 
-from constants import VERSION
+from constants import VERSION, LOGGER
 
 class checkUpdate(QObject):
     '''
@@ -21,6 +21,7 @@ class checkUpdate(QObject):
 
     def __init__(self) -> None:
         super().__init__()
+        LOGGER.debug('Checking for updates')
 
         link = 'https://api.github.com/repos/Wolfmyths/Genshin-Stopwatch/releases/latest'
         
@@ -45,6 +46,7 @@ class checkUpdate(QObject):
         try:
             data: dict = json.loads(reply.readAll().data().decode())
         except Exception as e:
+            LOGGER.error(f'Error: {e}')
             self.error.emit()
             return
         

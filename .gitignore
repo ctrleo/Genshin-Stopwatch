@@ -4,6 +4,7 @@ img/
 # Save Data
 config.ini
 save.txt
+debug.log
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

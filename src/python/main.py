@@ -6,11 +6,12 @@ from widgets.sysTrayIcon import sysTrayIcon
 
 from saveConfig import saveConfig
 from style import StyleManager, StyleSheets
-from constants import VERSION, ICON, PROGRAM_NAME
+from constants import VERSION, ICON, PROGRAM_NAME, LOGGER
 import notify, os
 
 if __name__ == '__main__':
     import sys
+    LOGGER.info("Starting program")
 
     styles = StyleManager()
 
@@ -38,6 +39,7 @@ if __name__ == '__main__':
     path = os.path.dirname(sys.executable)
     old = os.path.join(path, "Genshin-Stopwatch_OLD.exe")
     if os.path.exists(old):
+        LOGGER.debug("Found OLD executable, deleting")
         os.remove(old)
 
     app.exec()

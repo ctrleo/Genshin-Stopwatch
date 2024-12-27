@@ -6,15 +6,17 @@ from widgets.sysTrayIcon import sysTrayIcon
 
 from saveConfig import saveConfig
 from dataParser import dataParser, StopwatchDataKeys
-from constants import TimeFormats
+from constants import LOGGER, TimeFormats
 
 def Notify(title: str, message: str) -> None:
+    LOGGER.debug(f'Sending Notification: {title} - {message}')
     sysTray: sysTrayIcon = qtw.QApplication.instance().findChild(sysTrayIcon)
 
     if sysTray.supportsMessages():
         sysTray.showMessage(title, message)
 
 def checkMissedNotify() -> None:
+    LOGGER.debug('Checking for missed notifications')
     ''' 
     Checks for missed notifications
     for both stopwatches and static timers
@@ -34,6 +36,7 @@ def checkMissedNotify() -> None:
         try:
             finishedDate = datetime.strptime(stopwatches.get(stopwatch, StopwatchDataKeys.time_finished), TimeFormats.Saved_Date)
         except Exception as e:
+            LOGGER.error(f'Something went wrong converting a stopwatch finished date into a datetime object: {e}')
             print(f'Something went wrong converting a stopwatch finished date into a datetime object: {e}')
             continue
 
