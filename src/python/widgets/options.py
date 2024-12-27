@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from enum import StrEnum, auto
 from constants import LOGGER
-import webbrowser
+import webbrowser, os
 
 import PySide6.QtWidgets as qtw
 from PySide6.QtCore import Qt, QTimer
@@ -93,6 +93,12 @@ class optionsDock(qtw.QDockWidget):
         self.staticWeeklyNotifyCheckbox.setChecked(self.config.getWeeklyReset())
         self.staticWeeklyNotifyCheckbox.clicked.connect(lambda: self.settingChanged(True))
         self.staticWeeklyNotifyCheckbox.setToolTip('Will recieve a notification when there is a daily reset.')
+
+        self.debugModeCheckbox = qtw.QCheckBox()
+        self.debugModeCheckbox.setText('Debug Mode')
+        self.debugModeCheckbox.setChecked(os.file.exists('DEBUG_MODE'))
+        self.debugModeCheckbox.clicked.connect()
+        self.debugModeCheckbox.setToolTip('Enables debug features, such as verbose logging.')
         
         # Label for color scheme dropdown
         self.colorPalletLabel = qtw.QLabel('Color Scheme:')
@@ -111,6 +117,7 @@ class optionsDock(qtw.QDockWidget):
                        self.notifyCheckbox,
                        self.staticDailyNotifyCheckbox,
                        self.staticWeeklyNotifyCheckbox,
+                       self.debugModeCheckbox,
                        self.colorPalletLabel,
                        self.colorPallet):
             self.vertLayout.addWidget(widget)
@@ -144,6 +151,14 @@ class optionsDock(qtw.QDockWidget):
         
         self.style().polish(self.applyButton)
     
+    def debugMode(self):
+        if os.file.exists('DEBUG_MODE'):
+            os.remove('DEBUG_MODE')
+            self.debugModeCheckbox.setChecked(False)
+        else:
+            open('debug.log', 'w').close()
+            self.debugModeCheckbox.setChecked(True)
+
     def openKoFiLink(self) -> None:
         webbrowser.open_new_tab('https://ko-fi.com/C0C4MJZS9')
     
